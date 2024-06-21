@@ -23,12 +23,21 @@ def solve(cities):
     tour = [current_city]
 
     while unvisited_cities:
-        next_city = min(unvisited_cities,
-                        key=lambda city: dist[current_city][city])
+        print('unvisited', unvisited_cities)
+        # print('current city', current_city)
+        next_city = min(unvisited_cities,key=lambda city: dist[current_city][city])
         unvisited_cities.remove(next_city)
         tour.append(next_city)
         current_city = next_city
+    print('total_distance:',total_distance(tour,cities,N))
     return tour
+
+def total_distance(tour, cities, N): 
+    total_distance = 0
+    for i in range(N-1):
+        total_distance += distance(cities[tour[i]], cities[tour[i+1]])
+    total_distance += distance(cities[tour[N-1]], cities[tour[0]])
+    return total_distance
 
 
 if __name__ == '__main__':
