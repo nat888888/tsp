@@ -76,4 +76,4 @@ def total_distance(tour, cities, N):
 if __name__ == '__main__':
     assert len(sys.argv) > 1
     tour = solve(read_input(sys.argv[1]))
-    print_tour(tour)
+    # print_tour(tour)

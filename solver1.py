@@ -7,6 +7,7 @@ from common import print_tour, read_input
 
 #calculate distance
 def distance(city1, city2):
+    # print(city1, city2)
     return math.sqrt((city1[0] - city2[0]) ** 2 + (city1[1] - city2[1]) ** 2)
 
 # ベクトルPQとベクトルQRのクロスプロダクトを計算
@@ -123,7 +124,7 @@ def solve(cities, cities_index):
     for m in range(N):
         new_tour[m] = cities_index[tour[m]]
     this_distance = total_distance(tour,cities,N)
-    print('total_distance:', this_distance)
+    # print('total_distance:', this_distance)
     return new_tour, this_distance
 
 # calculate total distance
@@ -136,7 +137,8 @@ def total_distance(tour, cities, N):
 
 if __name__ == '__main__':
     assert len(sys.argv) > 1
-    city1, city2, city3, city4, cities1_index, cities2_index, cities3_index, cities4_index = divide_cities(read_input(sys.argv[1]))
+    cities = read_input(sys.argv[1])
+    city1, city2, city3, city4, cities1_index, cities2_index, cities3_index, cities4_index = divide_cities(cities)
     final_tour = []
 
     tour1, distance1 = solve(city1, cities1_index)
@@ -145,18 +147,26 @@ if __name__ == '__main__':
     
     tour2, distance2= solve(city2, cities2_index)
     final_tour.extend(tour2)
-    distance12 = distance(city1[-1], city2[0]) if city1 and city2 else 0
+    distance12 = distance(cities[tour1[-1]], cities[tour2[0]])
     # print('final_tour:', final_tour)
     
     tour3, distance3 = solve(city3, cities3_index)
     final_tour.extend(tour3)
-    distance23 = distance(city2[-1], city3[0]) if city2 and city3 else 0
+    distance23 = distance(cities[tour2[-1]], cities[tour3[0]])
     # print('final_tour:', final_tour)
     
     tour4, distance4 = solve(city4, cities4_index)
     final_tour.extend(tour4)
-    distance34 = distance(tour3[len(tour3)], tour4[0])
+    distance34 = distance(cities[tour3[-1]], cities[tour4[0]])
     # print('final_tour:', final_tour)
+
+    N = len(final_tour)
+    for k in range(N-3):
+        for m in range(k+2,N-1):
+            if two_opt(final_tour[k], final_tour[k+1], final_tour[m], final_tour[m+1], cities) == True: 
+                temp = final_tour[k+1]
+                final_tour[k+1] = final_tour[m]
+                final_tour[m] = temp
 
     sum_distance = distance1 + distance2 + distance3 + distance4 + distance12 + distance23 + distance34
     print('distance:', sum_distance)
